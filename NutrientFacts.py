@@ -129,7 +129,7 @@ class Nutrients:
         self.getProtein(total, daily)
         self.getElements(total, daily)
         self.getVitamins(total, daily)
-        print(f"{self.name} \n"
+        return (f"{self.name} \n"
               f"Calories: {str(self.calories)} \t {self.calorieDaily}\n"
               f"Total fat: {self.fat} \t {self.fatDaily}\n\tSaturated fat: {self.saturatedFat}\t{self.saturatedFatDaily}\n"
               f"Cholesterol: {self.cholesterol}\t{self.cholesterolDaily}\nSodium: {self.sodium}\t{self.sodiumDaily}\n"

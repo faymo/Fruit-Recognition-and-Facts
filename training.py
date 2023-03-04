@@ -58,13 +58,13 @@ model.compile(optimizer='adam',
              loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True),
               metrics=['accuracy'])
 
-epochs= 15
+epochs= 7
 history = model.fit(
   train_dataset,
   validation_data=input_dataset,
   epochs=epochs
 )
 
-# # save the model to disk
+# save the model to disk
 filename = 'finalized_model.sav'
 joblib.dump(model, filename)
