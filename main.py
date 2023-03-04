@@ -1,4 +1,5 @@
 import os
+from tkinter.ttk import Style
 import numpy as np
 import tensorflow as tf
 from sklearn.preprocessing import LabelEncoder
@@ -8,10 +9,45 @@ from NutrientFacts import Nutrients
 import tkinter as tk
 import joblib
 from tkinter import filedialog
+from PIL import ImageTk, Image
 
-# root = tk.Tk()
-# root.withdraw()
-# file_path = filedialog.askopenfilename()
+directory = ""
+
+def browseFiles():
+    global directory
+    filename = filedialog.askdirectory()
+    # Change label contents
+    directory = filename
+
+def predict():
+    pass
+
+def reset():
+    pass
+
+root = tk.Tk()
+root.title("Fruity Facts")
+root.geometry("700x400")
+img = ImageTk.PhotoImage(Image.open("black.jpg"))
+labelTitle = tk.Label(root, text="Fruity Facts")
+labelBox = tk.Label(root, image=img)
+labelPredicted = tk.Label(root, text="Predicted Image: ")
+labelFacts = tk.Label(root, text="Here are the Fruity Facts!")
+buttonCalc = tk.Button(root, text="Find Fruity Facts")
+buttonImage = tk.Button(root, text="Click here to insert image", command = browseFiles)
+buttonReset = tk.Button(root, text="Reset")
+textOutput = tk.Text(root, width = 40, height = 18)
+
+style = Style()
+
+style.configure('TButton', font=
+('calibri', 20, 'bold'),
+                borderwidth='4')
+
+# Changes will be reflected
+# by the movement of mouse.
+style.map('TButton', foreground=[('active', '!disabled', 'green')],
+          background=[('active', 'black')])
 
 #Parameters
 BATCH_SIZE = 32
@@ -65,3 +101,13 @@ try:
     fruitItem.getAll(y["totalNutrients"], y["totalDaily"])
 except:
     print("No fruit found")
+
+labelTitle.grid(row = 1, column = 2)
+labelBox.grid(row = 2, column = 2)
+labelPredicted.grid(row = 5, column = 2)
+labelFacts.grid(row = 1, column = 6)
+buttonCalc.grid(row = 7, column = 2)
+buttonReset.grid(row = 7, column = 4)
+buttonImage.grid(row = 5, column = 2)
+textOutput.grid(row = 2, column = 6)
+root.mainloop()
