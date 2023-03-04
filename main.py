@@ -5,6 +5,13 @@ from sklearn.preprocessing import LabelEncoder
 import json
 from py_edamam import Edamam
 from NutrientFacts import Nutrients
+import tkinter as tk
+import joblib
+from tkinter import filedialog
+
+# root = tk.Tk()
+# root.withdraw()
+# file_path = filedialog.askopenfilename()
 
 #Parameters
 BATCH_SIZE = 32
@@ -17,6 +24,7 @@ train_dataset = tf.keras.preprocessing.image_dataset_from_directory(
     image_size=(IMAGE_SIZE, IMAGE_SIZE),
     batch_size=BATCH_SIZE
 )
+
 input_dataset = tf.keras.preprocessing.image_dataset_from_directory(
     "fruits-360_dataset/fruits-360/input",
     shuffle=False,
@@ -35,45 +43,16 @@ classes = []
 for i in range(len(class_names_train)):
     classes.append(class_names_train[i])
 
-image = "fruits-360_dataset/fruits-360/Test/Apple Red 1/4_100.jpg"
+# save the model to disk
+filename = 'finalized_model.sav'
 
-model = tf.keras.models.Sequential([
-    tf.keras.layers.Rescaling(1. / 255, input_shape=(100, 100, 3)),  # Rescaling
-    tf.keras.layers.Conv2D(32, (3, 3), activation='relu'),
-    tf.keras.layers.MaxPooling2D(2, 2),  # This is the Convolutions layer
 
-    tf.keras.layers.Conv2D(64, (3, 3), activation='relu'),
-    tf.keras.layers.MaxPooling2D(2, 2),  # This is the Convolutions layer
-
-    tf.keras.layers.Conv2D(128, (3, 3), activation='relu'),
-    tf.keras.layers.MaxPooling2D(2, 2),  # This is the Convolutions layer
-
-    tf.keras.layers.Conv2D(128, (3, 3), activation='relu'),
-    tf.keras.layers.MaxPooling2D(2, 2),  # This is the Convolutions layer
-
-    tf.keras.layers.Flatten(),  # This is the Output layer
-    tf.keras.layers.Dense(512, activation='relu'),  # This is the Output layer
-    tf.keras.layers.Dense(131)  # This is the Output layer
-])
-
-#Compiling using Adam Optimizer
-model.compile(optimizer='adam',
-             loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True),
-              metrics=['accuracy'])
-
-epochs= 1
-history = model.fit(
-  train_dataset,
-  validation_data=input_dataset,
-  epochs=epochs
-)
+# load the model from disk
+loaded_model = joblib.load(filename)
 
 for test_images, test_labels in input_dataset.take(1):
     test_images = test_images.numpy()
-    predictions = model.predict(test_images)
-
-predictions.shape
-
+    predictions = loaded_model.predict(test_images)
 
 e = Edamam(nutrition_appid='60411624', nutrition_appkey='d51c2c10fb84b7f5cb6c470dda575338')
 food = classes[int(np.argmax(predictions[0]))]
